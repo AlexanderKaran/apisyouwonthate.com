@@ -12,9 +12,9 @@ How do you deploy your API, and what's the best way to structure it? Front-end f
 
 ## Don't build one from scratch
 
-Getting features, demos, and MVPs into users' hands is more important than the tech stack, language or processes you use. Users don't care how you built it; they care about the features and how well it works. Firebase has come on in leaps and bounds over the last few years and allows you to knock together a backend for your API quickly. Time and time again, I see people building out an API for simple CRUD operations. Don't make your life difficult. Why build and maintain a whole backend for simple operations? Firebase also allows for a more complex setup giving you the ability to write cloud functions that react and run code based on data changes in the database made by your front-end. If you're looking for an open-source alternative to Firebase, Supabase is a great companion. Plus, they have a great tag line: `Create a backend in less than 2 minutes.`
+Getting features, demos, and MVPs into users' hands is more important than the tech stack, language or processes you use. Users don't care how you built it; they care about the features and how well it works. [Firebase](https://firebase.google.com/) has come on in leaps and bounds over the last few years and allows you to knock together a backend for your API quickly. Time and time again, I see people building out an API for simple CRUD operations. Don't make your life difficult. Why build and maintain a whole backend for simple operations? Firebase also allows for a more complex setup giving you the ability to write cloud functions which respond to changes, and run code based on data changes in the database made by your front-end. If you're looking for an open-source alternative to Firebase, [Supabase](https://supabase.com/) is a great companion. Plus, they have a great tag line: `Create a backend in less than 2 minutes.`
 
-Another tool to deploy backends with hardly any code is AWS Amplify. You are given tools for authentication and data storage, serving web pages, and connecting to other AWS services. Amplify also comes with a nifty setup they call Studio, allowing you to manage app users and edit content. 
+Another tool to deploy backends with hardly any code is [AWS Amplify](https://aws.amazon.com/amplify/). You are given tools for authentication and data storage, serving web pages, and connecting to other AWS services. Amplify also comes with a nifty setup they call Studio, allowing you to manage app users and edit content. 
 
 There are some great tools out there for putting together backends. Managing dev ops, servers, and other backend infrastructure can be a pain sometimes. Assess if there is a need to put together a full-fledge backend/API before starting. We don't all need to be Stripe 😉
 
@@ -23,16 +23,16 @@ There are some great tools out there for putting together backends. Managing dev
 
 Edge computing has me excited; so many cool things are happening in this space. Deploying an API on edge is like writing serverless functions, with the main difference being you deploy to the edge network, and they tend to run on top of the V8 JavaScript runtime. I love this approach as you get to write endpoints as functions and forget about everything else. 
 
-There are a few providers in this space. One of the most notable is Cloudflare Workers, and you can write in Rust, C, and C++, not just JavaScript. They have some great examples of starter projects to get you going,
+There are a few providers in this space. One of the most notable is [Cloudflare Workers](https://workers.cloudflare.com/), and you can write in Rust, C, and C++, not just JavaScript. They have some great examples of starter projects to get you going,
 
-They also have an excellent course on building a serverless API with Cloudflare Workers on EggHead.
+They also have an excellent course on [building a serverless API with Cloudflare Workers on EggHead](https://egghead.io/courses/build-a-serverless-api-with-cloudflare-workers-d67ca551).
 
-However, I love Deno Deploy, a one-click deploy service for Deno. It allows you to instantly deploy JavaScript on the edge every time you push code to Github. Forget servers, forget vendor lock-in and push JavaScript all the livelong day.
+I also love [Deno Deploy](https://deno.com/deploy), a one-click deploy service for [Deno](https://deno.land/). It allows you to instantly deploy JavaScript on the edge every time you push code to Github. Forget servers, forget vendor lock-in and push JavaScript all the livelong day.
 
-Let me give you an example of how easy it is to deploy a Rest API. I have set up a single route using Oak (an HTTP framework for Deno) that returns an estimated carbon footprint for the provided electricity consumption. 
+This is an example of how simple it can be to deploy a Rest API. I have set up a single route using [Oak](https://oakserver.github.io/oak/) (an HTTP framework for Deno) that returns an estimated carbon footprint for the provided electricity consumption. 
 
 
-```
+```js
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 
 const port = 3011;
@@ -83,14 +83,14 @@ Another great part of Deno Deploy is keeping all the services in one repo is eas
 
 ## Serverless Functions
 
-Serverless functions share a lot with edge functions, but you usually code in Node rather than a V8 browser runtime. However, they can have a cold start, meaning the code does not run the second it's called, unlike edge functions which happen straight away. Many providers offer serverless functions, but we will focus on AWS Lambda as it is one of the most common. 
+Serverless functions share a lot with edge functions, but you usually code in Node rather than a V8 browser runtime. However, they can have a cold start, meaning the code does not run the second it's called, unlike edge functions which happen straight away. Many providers offer serverless functions, but we will focus on [AWS Lambda](https://aws.amazon.com/lambda/) as it is one of the most common. 
 
-Lambda functions are used for many different solutions, but they need to be paired with an API Gateway when building an API. It turns out AWS have a service for that, too 😉. When creating Lambda functions in the AWS console, they offer options to connect an endpoint in a new or existing API Gateway, making setup a breeze. If you are used to building monoliths and everything in one place, this can seem confusing. However, it simply boils down to your API Gateway containing all your routes, and each Lambda function is the controller for the route.
+Lambda functions are used for many different solutions, but they need to be paired with an API Gateway when building an API. It turns out AWS have a service for that, too 😉. When creating Lambda functions in the AWS console, they offer options to connect an endpoint in a new or existing [API Gateway](https://aws.amazon.com/api-gateway/), making setup a breeze. If you are used to building monoliths and everything in one place, this can seem confusing. However, it simply boils down to your API Gateway containing all your routes, and each Lambda function is the controller for the route.
 
-Before we dive deeper into how this works, let's look at how Lambda functions are structured. I have stolen one of the AWS HTTP templates for updating DynamoDB:
+Before we dive deeper into how this works, let's look at how Lambda functions are structured. I have stolen one of the AWS HTTP templates for updating [DynamoDB](https://aws.amazon.com/dynamodb/):
 
 
-```
+```js
 const AWS = require('aws-sdk');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
@@ -150,7 +150,7 @@ exports.handler = async (event, context) => {
 
 As you see here, the function responded to an event and accessed the HTTP method inside to see what type of request it was. Personally, the biggest hurdle I had when using serverless functions or edge computing was how there were no req, res and next functions like I was used to in ExpressJS. Thankfully, though, there are many ways to import frameworks you're used to into Lambda. You also do not have to code in Node; other languages such as Python and Java are on offer too.
 
-Setting up serverless functions with an API Gateway can be done super quickly using the AWS console, but a more extensive API with many endpoints would be time-consuming to set this up way. Enter tools like ClaudiaJS and Serverless.
+Setting up serverless functions with an API Gateway can be done super quickly using the AWS console, but a more extensive API with many endpoints would be time-consuming to set this up way. Enter tools like [ClaudiaJS](https://www.claudiajs.com/) and [Serverless](https://www.serverless.com/).
 
 Claudia allows you to easily set up, deploy, and update code to AWS Lambda, making development and automating releases a breeze. If you want even more capabilities, check out Serverless. It makes deploying serverless functions to AWS easier, allowing you to access and deploy complete AWS services outside of Lambda. Serverless goes even further and has setups for Google Cloud Functions and Azure Functions. 
 
